@@ -6,7 +6,8 @@ export default defineConfig({
   plugins: [react()],
   esbuild: {
     logOverride: { 'this-is-undefined-in-esm': 'silent' },
-    target: 'es2020'
+    target: 'es2020',
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : []
   },
   resolve: {
     alias: {
