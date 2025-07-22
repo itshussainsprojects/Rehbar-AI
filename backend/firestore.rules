@@ -1,0 +1,157 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+    
+    function hasValidSubscription() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.subscriptionTier in ['pro', 'premium'];
+    }
+    
+    function isTrialValid() {
+      return isAuthenticated() && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.trialEndDate > request.time;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+      allow read, write: if isAdmin();
+      allow create: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Plans collection (read-only for users, full access for admins)
+    match /plans/{planId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // Plan approvals collection
+    match /planApprovals/{approvalId} {
+      allow read: if isAuthenticated() &&
+                    (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isAuthenticated() &&
+                     request.resource.data.userId == request.auth.uid;
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Chat history collection
+    match /chatHistory/{chatId} {
+      allow read, write: if isAuthenticated() &&
+                           resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() &&
+                     request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // Conversations collection
+    match /conversations/{conversationId} {
+      allow read, write: if isAuthenticated() && 
+                           resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && 
+                     request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Messages collection
+    match /messages/{messageId} {
+      allow read, write: if isAuthenticated() && 
+                           resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && 
+                     request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Extension interactions
+    match /extensionInteractions/{interactionId} {
+      allow read, write: if isAuthenticated() && 
+                           resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && 
+                     request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Downloads collection
+    match /downloads/{downloadId} {
+      allow read, write: if isAuthenticated() && 
+                           resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && 
+                     request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // Subscriptions collection
+    match /subscriptions/{subscriptionId} {
+      allow read, write: if isAuthenticated() && 
+                           resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && 
+                     request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // Payments collection
+    match /payments/{paymentId} {
+      allow read: if isAuthenticated() && 
+                    resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // Checkout sessions
+    match /checkoutSessions/{sessionId} {
+      allow read, write: if isAuthenticated() && 
+                           resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && 
+                     request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Refresh tokens
+    match /refreshTokens/{tokenId} {
+      allow read, write: if isAuthenticated() && 
+                           resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && 
+                     request.resource.data.userId == request.auth.uid;
+    }
+    
+    // Extension feedback
+    match /extensionFeedback/{feedbackId} {
+      allow read, write: if isAuthenticated() && 
+                           resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && 
+                     request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // Admin collections
+    match /analytics/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    match /systemLogs/{document=**} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Public collections (read-only)
+    match /publicData/{document=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Default deny rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

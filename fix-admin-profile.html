@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fix Admin Profile</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <h1>Fix Admin Profile</h1>
+    <div id="results"></div>
+    <button onclick="fixAdminProfile()">Fix Admin Profile</button>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCqLQN_f8hqL8c2C5bAC9jNG73X2O5kqog",
+            authDomain: "rehbar-ai.firebaseapp.com",
+            projectId: "rehbar-ai",
+            storageBucket: "rehbar-ai.firebasestorage.app",
+            messagingSenderId: "1092527887585",
+            appId: "1:1092527887585:web:4c44ee8b7a2c4c8a8b5c8d"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        function log(message) {
+            document.getElementById('results').innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+
+        async function fixAdminProfile() {
+            log('🔧 Fixing admin profile...');
+            
+            try {
+                // Sign in to get the UID
+                const userCredential = await auth.signInWithEmailAndPassword('admin@rehbar.ai', 'admin123');
+                const user = userCredential.user;
+                const uid = user.uid;
+                
+                log('✅ Signed in, UID: ' + uid);
+                
+                // Create complete admin profile
+                const completeProfile = {
+                    id: uid,
+                    uid: uid,
+                    email: 'admin@rehbar.ai',
+                    displayName: 'System Administrator',
+                    state: 'active',
+                    isAdmin: true,
+                    role: 'admin',
+                    usage: {
+                        meetingsToday: 0,
+                        voiceMinutesToday: 0,
+                        aiSuggestionsToday: 0,
+                        lastResetDate: new Date().toISOString().split('T')[0],
+                        totalMeetings: 0,
+                        totalVoiceMinutes: 0,
+                        totalAiSuggestions: 0
+                    },
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                log('📝 Creating complete profile...');
+                await db.collection('users').doc(uid).set(completeProfile);
+                log('✅ Complete admin profile created!');
+                
+                // Verify the profile
+                log('🔍 Verifying profile...');
+                const doc = await db.collection('users').doc(uid).get();
+                if (doc.exists) {
+                    const data = doc.data();
+                    log('✅ Profile verified:');
+                    log('  - Email: ' + data.email);
+                    log('  - isAdmin: ' + data.isAdmin);
+                    log('  - Has usage: ' + (data.usage ? 'Yes' : 'No'));
+                    log('  - Has timestamps: ' + (data.createdAt ? 'Yes' : 'No'));
+                    log('🎉 Admin login should now work!');
+                } else {
+                    log('❌ Profile verification failed');
+                }
+                
+                await auth.signOut();
+                log('🔓 Signed out');
+                
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+                console.error('Full error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

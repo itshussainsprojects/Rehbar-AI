@@ -1,0 +1,62 @@
+[
+  {
+    "id": "user_1752748270604_a00jvmdzl",
+    "email": "test@rehbar.ai",
+    "displayName": "Test User",
+    "provider": "email",
+    "state": "approved",
+    "plan": "free",
+    "planRequestedAt": "2025-07-17T11:58:10.871Z",
+    "approvedAt": "2025-07-17T12:49:25.036Z",
+    "approvedBy": "admin_1",
+    "createdAt": "2025-07-17T10:31:10.604Z",
+    "lastLogin": "2025-07-18T12:33:01.460Z",
+    "isActive": true,
+    "usage": {
+      "meetingsToday": 0,
+      "voiceMinutesToday": 0,
+      "aiSuggestionsToday": 0,
+      "lastResetDate": "2025-07-18"
+    }
+  },
+  {
+    "id": "user_1752757439202_8u09r4q50",
+    "email": "personalfile005018@gmail.com",
+    "displayName": "Hussa",
+    "provider": "email",
+    "state": "rejected",
+    "plan": null,
+    "planRequestedAt": "2025-07-17T13:06:28.783Z",
+    "approvedAt": "2025-07-17T13:05:46.449Z",
+    "approvedBy": "admin_1",
+    "createdAt": "2025-07-17T13:03:59.202Z",
+    "lastLogin": "2025-07-17T13:03:59.202Z",
+    "isActive": true,
+    "usage": {
+      "meetingsToday": 0,
+      "voiceMinutesToday": 0,
+      "aiSuggestionsToday": 0,
+      "lastResetDate": "2025-07-17"
+    }
+  },
+  {
+    "id": "user_1752842200057_kavy7ceek",
+    "email": "personalfiles005018@gmail.com",
+    "displayName": "ahmed ",
+    "provider": "email",
+    "state": "registered",
+    "plan": null,
+    "planRequestedAt": null,
+    "approvedAt": null,
+    "approvedBy": null,
+    "createdAt": "2025-07-18T12:36:40.057Z",
+    "lastLogin": "2025-07-18T12:37:16.545Z",
+    "isActive": true,
+    "usage": {
+      "meetingsToday": 0,
+      "voiceMinutesToday": 0,
+      "aiSuggestionsToday": 0,
+      "lastResetDate": "2025-07-18"
+    }
+  }
+]

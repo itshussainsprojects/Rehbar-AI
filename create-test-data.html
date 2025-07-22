@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Test Data</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <h1>Create Test Data for Admin Panel</h1>
+    <div id="results"></div>
+    <button onclick="createTestUsers()">Create Test Users</button>
+    <button onclick="createTestApprovals()">Create Test Plan Approvals</button>
+    <button onclick="clearTestData()">Clear Test Data</button>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCqLQN_f8hqL8c2C5bAC9jNG73X2O5kqog",
+            authDomain: "rehbar-ai.firebaseapp.com",
+            projectId: "rehbar-ai",
+            storageBucket: "rehbar-ai.firebasestorage.app",
+            messagingSenderId: "1092527887585",
+            appId: "1:1092527887585:web:4c44ee8b7a2c4c8a8b5c8d"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        function log(message) {
+            document.getElementById('results').innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+
+        async function createTestUsers() {
+            log('👥 Creating test users...');
+            
+            const testUsers = [
+                {
+                    id: 'test-user-1',
+                    uid: 'test-user-1',
+                    email: 'user1@test.com',
+                    displayName: 'Test User 1',
+                    state: 'registered',
+                    isAdmin: false,
+                    usage: {
+                        meetingsToday: 0,
+                        voiceMinutesToday: 0,
+                        aiSuggestionsToday: 0,
+                        lastResetDate: '2024-01-18',
+                        totalMeetings: 0,
+                        totalVoiceMinutes: 0,
+                        totalAiSuggestions: 0
+                    },
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    lastLogin: new Date()
+                },
+                {
+                    id: 'test-user-2',
+                    uid: 'test-user-2',
+                    email: 'user2@test.com',
+                    displayName: 'Test User 2',
+                    state: 'pending_approval',
+                    isAdmin: false,
+                    usage: {
+                        meetingsToday: 0,
+                        voiceMinutesToday: 0,
+                        aiSuggestionsToday: 0,
+                        lastResetDate: '2024-01-18',
+                        totalMeetings: 0,
+                        totalVoiceMinutes: 0,
+                        totalAiSuggestions: 0
+                    },
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                    lastLogin: new Date()
+                }
+            ];
+
+            try {
+                for (const user of testUsers) {
+                    await db.collection('users').doc(user.id).set(user);
+                    log('✅ Created user: ' + user.email);
+                }
+                log('🎉 All test users created!');
+            } catch (error) {
+                log('❌ Error creating users: ' + error.message);
+            }
+        }
+
+        async function createTestApprovals() {
+            log('📋 Creating test plan approvals...');
+            
+            const testApprovals = [
+                {
+                    userId: 'test-user-1',
+                    userEmail: 'user1@test.com',
+                    userName: 'Test User 1',
+                    planRequested: 'basic',
+                    planDetails: {
+                        id: 'basic',
+                        name: 'Basic Plan',
+                        price: 9.99,
+                        duration: 'month',
+                        features: ['Basic features'],
+                        limits: { meetingsPerDay: 10, voiceMinutesPerDay: 120, aiSuggestionsPerDay: 50 }
+                    },
+                    requestedAt: new Date(),
+                    status: 'pending',
+                    notes: ''
+                },
+                {
+                    userId: 'test-user-2',
+                    userEmail: 'user2@test.com',
+                    userName: 'Test User 2',
+                    planRequested: 'pro',
+                    planDetails: {
+                        id: 'pro',
+                        name: 'Pro Plan',
+                        price: 19.99,
+                        duration: 'month',
+                        features: ['Pro features'],
+                        limits: { meetingsPerDay: -1, voiceMinutesPerDay: -1, aiSuggestionsPerDay: -1 }
+                    },
+                    requestedAt: new Date(),
+                    status: 'pending',
+                    notes: ''
+                }
+            ];
+
+            try {
+                for (const approval of testApprovals) {
+                    const docRef = await db.collection('planApprovals').add(approval);
+                    log('✅ Created approval: ' + docRef.id + ' for ' + approval.userEmail);
+                }
+                log('🎉 All test approvals created!');
+            } catch (error) {
+                log('❌ Error creating approvals: ' + error.message);
+            }
+        }
+
+        async function clearTestData() {
+            log('🗑️ Clearing test data...');
+            
+            try {
+                // Delete test users
+                const usersSnapshot = await db.collection('users').where('email', '>=', 'user').where('email', '<=', 'user\uf8ff').get();
+                for (const doc of usersSnapshot.docs) {
+                    if (doc.data().email.includes('test.com')) {
+                        await doc.ref.delete();
+                        log('🗑️ Deleted user: ' + doc.data().email);
+                    }
+                }
+
+                // Delete test approvals
+                const approvalsSnapshot = await db.collection('planApprovals').get();
+                for (const doc of approvalsSnapshot.docs) {
+                    const data = doc.data();
+                    if (data.userEmail && data.userEmail.includes('test.com')) {
+                        await doc.ref.delete();
+                        log('🗑️ Deleted approval: ' + doc.id);
+                    }
+                }
+
+                log('🎉 Test data cleared!');
+            } catch (error) {
+                log('❌ Error clearing data: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

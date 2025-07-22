@@ -1,0 +1,59 @@
+{
+  "FREE": {
+    "id": "free",
+    "name": "Free Trial",
+    "price": 0,
+    "duration": "3 days",
+    "features": [
+      "Chrome Extension Access",
+      "Basic AI Suggestions",
+      "Google Meet Support",
+      "Limited Voice Recognition"
+    ],
+    "limits": {
+      "meetingsPerDay": 3,
+      "voiceMinutesPerDay": 30,
+      "aiSuggestionsPerDay": 50
+    }
+  },
+  "PRO": {
+    "id": "pro",
+    "name": "Professional",
+    "price": 29,
+    "duration": "monthly",
+    "features": [
+      "All Free Features",
+      "Advanced AI Suggestions",
+      "All Meeting Platforms",
+      "Unlimited Voice Recognition",
+      "Desktop App Access",
+      "Priority Support"
+    ],
+    "limits": {
+      "meetingsPerDay": "unlimited",
+      "voiceMinutesPerDay": "unlimited",
+      "aiSuggestionsPerDay": "unlimited"
+    }
+  },
+  "PREMIUM": {
+    "id": "premium",
+    "name": "Premium Enterprise",
+    "price": 99,
+    "duration": "monthly",
+    "features": [
+      "All Pro Features",
+      "Custom AI Training",
+      "Team Management",
+      "Analytics Dashboard",
+      "API Access",
+      "White-label Options",
+      "Dedicated Support"
+    ],
+    "limits": {
+      "meetingsPerDay": "unlimited",
+      "voiceMinutesPerDay": "unlimited",
+      "aiSuggestionsPerDay": "unlimited",
+      "teamMembers": "unlimited"
+    }
+  }
+}

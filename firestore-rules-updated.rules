@@ -1,0 +1,234 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is admin
+    function isAdmin() {
+      return request.auth != null && 
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+    
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Users collection - users can read/write their own data, admins can do everything
+    match /users/{userId} {
+      // Users can read and write their own profile
+      allow read, write: if isOwner(userId);
+      
+      // Admins can read and write any user profile
+      allow read, write: if isAdmin();
+      
+      // Allow user creation during registration (anyone can create their own profile)
+      allow create: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Web sessions collection - for extension authentication
+    match /webSessions/{sessionId} {
+      // Users can create and manage their own sessions
+      allow create, read, update: if request.auth != null;
+      
+      // Allow deletion of own sessions
+      allow delete: if request.auth != null && 
+                       request.auth.uid == resource.data.userId;
+      
+      // Admins can manage all sessions
+      allow read, write: if isAdmin();
+    }
+    
+    // User devices collection - for device fingerprinting
+    match /userDevices/{deviceId} {
+      // Users can manage their own devices
+      allow create, read, update: if request.auth != null;
+      
+      // Allow users to manage devices linked to their account
+      allow read, write: if request.auth != null && 
+                            request.auth.uid == resource.data.userId;
+      
+      // Admins can manage all devices
+      allow read, write: if isAdmin();
+    }
+    
+    // Refresh tokens collection - for JWT management
+    match /refreshTokens/{tokenId} {
+      // Users can create and read their own refresh tokens
+      allow create, read: if request.auth != null;
+      
+      // Allow users to manage their own tokens
+      allow read, write: if request.auth != null && 
+                            request.auth.uid == resource.data.userId;
+      
+      // Admins can manage all tokens
+      allow read, write: if isAdmin();
+    }
+    
+    // Extension requests collection - for rate limiting and monitoring
+    match /extensionRequests/{requestId} {
+      // Users can create their own extension requests
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId;
+      
+      // Users can read their own requests
+      allow read: if request.auth != null && 
+                     request.auth.uid == resource.data.userId;
+      
+      // Admins can read all extension requests
+      allow read, write: if isAdmin();
+    }
+    
+    // Security events collection - for monitoring
+    match /securityEvents/{eventId} {
+      // Allow system to create security events
+      allow create: if request.auth != null;
+      
+      // Users can read their own security events
+      allow read: if request.auth != null && 
+                     request.auth.uid == resource.data.userId;
+      
+      // Admins can read all security events
+      allow read, write: if isAdmin();
+    }
+    
+    // Plans collection - everyone can read, only admins can write
+    match /plans/{planId} {
+      // Anyone authenticated can read plans
+      allow read: if request.auth != null;
+      
+      // Only admins can create, update, or delete plans
+      allow write: if isAdmin();
+    }
+    
+    // Plan approvals collection - users can create their own, admins can do everything
+    match /planApprovals/{approvalId} {
+      // Users can create their own approval requests
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId;
+      
+      // Users can read their own approval requests
+      allow read: if request.auth != null && 
+                     request.auth.uid == resource.data.userId;
+      
+      // Admins can read, write, update, and delete all approval requests
+      allow read, write, update, delete: if isAdmin();
+    }
+    
+    // System logs collection - only admins can read/write
+    match /systemLogs/{logId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Chat history collection - users can read/write their own, admins can read all
+    match /chatHistory/{chatId} {
+      // Users can read/write their own chat history
+      allow read, write: if request.auth != null && 
+                            request.auth.uid == resource.data.userId;
+      
+      // Users can create their own chat history
+      allow create: if request.auth != null && 
+                       request.auth.uid == request.resource.data.userId;
+      
+      // Admins can read all chat history
+      allow read: if isAdmin();
+    }
+    
+    // Analytics collection - only admins can read/write
+    match /analytics/{docId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Settings collection - only admins can read/write
+    match /settings/{settingId} {
+      allow read, write: if isAdmin();
+    }
+    
+    // Notifications collection - users can read their own, admins can manage all
+    match /notifications/{notificationId} {
+      allow read: if request.auth != null && 
+                     request.auth.uid == resource.data.userId;
+      allow write: if isAdmin();
+    }
+    
+    // User profiles collection - for backward compatibility
+    match /userProfiles/{userId} {
+      // Users can read and write their own profile
+      allow read, write: if isOwner(userId);
+      
+      // Admins can read and write any user profile
+      allow read, write: if isAdmin();
+      
+      // Allow user creation during registration
+      allow create: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Conversations collection - users can manage their own
+    match /conversations/{conversationId} {
+      allow read, write: if request.auth != null && 
+                            resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // Voice recordings collection - users can manage their own
+    match /voiceRecordings/{recordingId} {
+      allow read, write: if request.auth != null && 
+                            resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // Meetings collection - users can manage their own
+    match /meetings/{meetingId} {
+      allow read, write: if request.auth != null && 
+                            resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // AI suggestions collection - users can manage their own
+    match /aiSuggestions/{suggestionId} {
+      allow read, write: if request.auth != null && 
+                            resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // Usage collection - users can read/write their own
+    match /usage/{userId} {
+      allow read, write: if isOwner(userId);
+      allow read: if isAdmin();
+    }
+    
+    // Subscriptions collection - users can read/write their own
+    match /subscriptions/{userId} {
+      allow read, write: if isOwner(userId);
+      allow read, write: if isAdmin();
+    }
+    
+    // User settings collection - users can read/write their own
+    match /userSettings/{userId} {
+      allow read, write: if isOwner(userId);
+      allow read: if isAdmin();
+    }
+    
+    // Feedback collection - users can create and read their own
+    match /feedback/{feedbackId} {
+      allow read, write: if request.auth != null && 
+                            resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                       request.resource.data.userId == request.auth.uid;
+      allow read: if isAdmin();
+    }
+    
+    // Default deny all other documents
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

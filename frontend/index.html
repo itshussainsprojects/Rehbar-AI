@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rehbar AI - Guiding Your Voice in Every Conversation</title>
+    <meta name="description" content="AI voice assistant for interviews, conversations, and productivity. Available as Chrome extension and desktop app." />
+
+    <!-- Preload fonts -->
+    <link rel="preload" href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+    <noscript>
+      <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@900,700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+    </noscript>
+  </head>
+  <body class="bg-black text-white font-space-grotesk">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Noise overlay -->
+    <div class="fixed inset-0 pointer-events-none opacity-[0.04] mix-blend-multiply z-50"
+         style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSBiYXNlRnJlcXVlbmN5PSIwLjkiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjIiLz48L2ZpbHRlcj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4xIi8+PC9zdmc+')"></div>
+
+    <!-- Fallback for JS disabled -->
+    <noscript>
+      <div class="min-h-screen flex items-center justify-center bg-black text-white">
+        <div class="text-center">
+          <h1 class="text-4xl font-bold mb-4">Rehbar AI</h1>
+          <p class="text-xl mb-8">Guiding Your Voice in Every Conversation</p>
+          <p class="text-gray-400">Please enable JavaScript to use this application.</p>
+        </div>
+      </div>
+    </noscript>
+
+

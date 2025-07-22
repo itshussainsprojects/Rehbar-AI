@@ -1,0 +1,11 @@
+[
+  {
+    "id": "admin_1",
+    "email": "admin@rehbar.ai",
+    "password": "admin123",
+    "name": "System Administrator",
+    "role": "super_admin",
+    "createdAt": "2025-07-17T10:31:10.499Z",
+    "isActive": true
+  }
+]

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup Admin User</title>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <h1>Setup Admin User</h1>
+    <div id="status"></div>
+    <button onclick="setupAdmin()">Create Admin User</button>
+    <button onclick="checkAdmin()">Check Admin Status</button>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCqLQN_f8hqL8c2C5bAC9jNG73X2O5kqog",
+            authDomain: "rehbar-ai.firebaseapp.com",
+            projectId: "rehbar-ai",
+            storageBucket: "rehbar-ai.firebasestorage.app",
+            messagingSenderId: "1092527887585",
+            appId: "1:1092527887585:web:4c44ee8b7a2c4c8a8b5c8d"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        function log(message) {
+            document.getElementById('status').innerHTML += '<p>' + message + '</p>';
+            console.log(message);
+        }
+
+        async function setupAdmin() {
+            log('🔧 Setting up admin user...');
+            
+            const adminEmail = 'admin@rehbar.ai';
+            const adminPassword = 'admin123';
+            
+            try {
+                // First, try to create the user
+                log('📝 Creating Firebase Auth user...');
+                let userCredential;
+                
+                try {
+                    userCredential = await auth.createUserWithEmailAndPassword(adminEmail, adminPassword);
+                    log('✅ Firebase Auth user created: ' + userCredential.user.uid);
+                } catch (createError) {
+                    if (createError.code === 'auth/email-already-in-use') {
+                        log('⚠️ User already exists, signing in...');
+                        userCredential = await auth.signInWithEmailAndPassword(adminEmail, adminPassword);
+                        log('✅ Signed in existing user: ' + userCredential.user.uid);
+                    } else {
+                        throw createError;
+                    }
+                }
+                
+                const user = userCredential.user;
+                
+                // Create/update user profile in Firestore with admin privileges
+                log('📝 Creating admin profile in Firestore...');
+                const adminProfile = {
+                    email: adminEmail,
+                    displayName: 'System Administrator',
+                    state: 'active',
+                    isAdmin: true,
+                    role: 'admin',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    lastLogin: firebase.firestore.FieldValue.serverTimestamp(),
+                    plan: null,
+                    planDetails: null
+                };
+                
+                await db.collection('users').doc(user.uid).set(adminProfile, { merge: true });
+                log('✅ Admin profile created in Firestore');
+                
+                // Sign out after setup
+                await auth.signOut();
+                log('✅ Admin user setup complete!');
+                log('🎉 You can now login with: admin@rehbar.ai / admin123');
+                
+            } catch (error) {
+                log('❌ Error setting up admin: ' + error.message);
+                console.error('Full error:', error);
+            }
+        }
+        
+        async function checkAdmin() {
+            log('🔍 Checking admin status...');
+            
+            try {
+                // Sign in as admin
+                const userCredential = await auth.signInWithEmailAndPassword('admin@rehbar.ai', 'admin123');
+                const user = userCredential.user;
+                log('✅ Signed in as: ' + user.email);
+                
+                // Check Firestore profile
+                const doc = await db.collection('users').doc(user.uid).get();
+                if (doc.exists) {
+                    const profile = doc.data();
+                    log('📋 Profile found:');
+                    log('  - Email: ' + profile.email);
+                    log('  - Display Name: ' + profile.displayName);
+                    log('  - Is Admin: ' + profile.isAdmin);
+                    log('  - State: ' + profile.state);
+                    
+                    if (profile.isAdmin) {
+                        log('✅ Admin privileges confirmed!');
+                    } else {
+                        log('❌ No admin privileges found');
+                    }
+                } else {
+                    log('❌ No profile found in Firestore');
+                }
+                
+                await auth.signOut();
+                
+            } catch (error) {
+                log('❌ Error checking admin: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

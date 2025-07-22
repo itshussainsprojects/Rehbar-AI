@@ -1,0 +1,38 @@
+[
+  {
+    "id": "approval_1752753490872_5lg8ut3eh",
+    "userId": "user_1752748270604_a00jvmdzl",
+    "userEmail": "test@rehbar.ai",
+    "userName": "Test User",
+    "planRequested": "free",
+    "requestedAt": "2025-07-17T11:58:10.871Z",
+    "status": "approved",
+    "approvedBy": "admin_1",
+    "approvedAt": "2025-07-17T12:49:25.036Z",
+    "notes": ""
+  },
+  {
+    "id": "approval_1752757458884_ska95kxbr",
+    "userId": "user_1752757439202_8u09r4q50",
+    "userEmail": "personalfile005018@gmail.com",
+    "userName": "Hussa",
+    "planRequested": "free",
+    "requestedAt": "2025-07-17T13:04:18.882Z",
+    "status": "approved",
+    "approvedBy": "admin_1",
+    "approvedAt": "2025-07-17T13:05:46.449Z",
+    "notes": ""
+  },
+  {
+    "id": "approval_1752757588784_u1nussoux",
+    "userId": "user_1752757439202_8u09r4q50",
+    "userEmail": "personalfile005018@gmail.com",
+    "userName": "Hussa",
+    "planRequested": "pro",
+    "requestedAt": "2025-07-17T13:06:28.783Z",
+    "status": "rejected",
+    "approvedBy": "admin_1",
+    "approvedAt": "2025-07-17T13:38:04.613Z",
+    "notes": ""
+  }
+]
