@@ -5,7 +5,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 Starting production build...');
+console.log('🚀 Starting production build (v2)...');
 
 try {
   // Check if we're in production mode

@@ -3,11 +3,19 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react({
+    babel: {
+      parserOpts: {
+        plugins: ['decorators-legacy']
+      }
+    }
+  })],
   esbuild: {
     logOverride: { 'this-is-undefined-in-esm': 'silent' },
     target: 'es2020',
-    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : []
+    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+    ignoreAnnotations: true,
+    legalComments: 'none'
   },
   resolve: {
     alias: {

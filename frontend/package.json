@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node build.js",
+    "build": "vite build --mode production --logLevel warn",
     "build-check": "tsc && vite build",
     "preview": "vite preview",
     "vercel": "vercel --prod",
