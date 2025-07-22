@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rehbar AI Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        .input-test {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+    <h1>🤖 Rehbar AI Extension Test Page</h1>
+    
+    <div class="test-section">
+        <h2>📋 Setup Checklist</h2>
+        <div id="setupStatus">
+            <div class="info">Loading extension status...</div>
+        </div>
+        <button onclick="checkSetup()">Check Setup</button>
+    </div>
+
+    <div class="test-section">
+        <h2>🎤 Voice Recognition Test</h2>
+        <p>This simulates a meeting environment. Use the extension here to test voice recognition.</p>
+        
+        <div class="status info">
+            <strong>Instructions:</strong><br>
+            1. Click the Rehbar AI extension icon<br>
+            2. Click "Start Listening"<br>
+            3. Speak into your microphone<br>
+            4. Check if the overlay appears and transcribes your speech
+        </div>
+
+        <textarea class="input-test" placeholder="Test auto-typing here - speak and then use the Type button in suggestions..."></textarea>
+        
+        <div contenteditable="true" class="input-test" style="min-height: 60px; background: white;">
+            Click here and test auto-typing in a contenteditable field...
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>⌨️ Keyboard Shortcuts Test</h2>
+        <p>Test these keyboard shortcuts:</p>
+        <ul>
+            <li><code>Ctrl+Shift+L</code> - Toggle listening</li>
+            <li><code>Ctrl+Shift+O</code> - Show/hide overlay</li>
+            <li><code>Ctrl+Shift+Q</code> - Quick action (copy/type/speak)</li>
+            <li><code>Ctrl+Shift+M</code> - Switch mode</li>
+        </ul>
+        
+        <div id="shortcutStatus" class="status info">
+            Press any shortcut to test...
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔧 Debug Information</h2>
+        <button onclick="showDebugInfo()">Show Debug Info</button>
+        <button onclick="testMicrophone()">Test Microphone</button>
+        <button onclick="clearStorage()">Clear Storage</button>
+        
+        <pre id="debugOutput" style="background: #f8f9fa; padding: 10px; border-radius: 4px; overflow: auto; max-height: 300px;"></pre>
+    </div>
+
+    <script>
+        // Check if extension is loaded
+        function checkSetup() {
+            const statusDiv = document.getElementById('setupStatus');
+            
+            // Check if content script is loaded
+            if (window.rehbarAI) {
+                statusDiv.innerHTML = '<div class="success">✅ Extension content script loaded</div>';
+            } else {
+                statusDiv.innerHTML = '<div class="error">❌ Extension content script not found</div>';
+            }
+            
+            // Try to communicate with extension
+            if (typeof chrome !== 'undefined' && chrome.runtime) {
+                chrome.runtime.sendMessage({type: 'GET_STATUS'}, (response) => {
+                    if (chrome.runtime.lastError) {
+                        statusDiv.innerHTML += '<div class="error">❌ Cannot communicate with extension</div>';
+                    } else {
+                        statusDiv.innerHTML += '<div class="success">✅ Extension communication working</div>';
+                    }
+                });
+            } else {
+                statusDiv.innerHTML += '<div class="error">❌ Chrome extension APIs not available</div>';
+            }
+        }
+
+        // Test microphone access
+        async function testMicrophone() {
+            const debugOutput = document.getElementById('debugOutput');
+            
+            try {
+                debugOutput.textContent = 'Requesting microphone permission...';
+                
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                debugOutput.textContent = '✅ Microphone permission granted!\n';
+                debugOutput.textContent += 'Audio tracks: ' + stream.getAudioTracks().length + '\n';
+                
+                // Stop the stream
+                stream.getTracks().forEach(track => track.stop());
+                debugOutput.textContent += 'Stream stopped.\n';
+                
+            } catch (error) {
+                debugOutput.textContent = '❌ Microphone error: ' + error.message + '\n';
+                debugOutput.textContent += 'Error name: ' + error.name + '\n';
+            }
+        }
+
+        // Show debug information
+        function showDebugInfo() {
+            const debugOutput = document.getElementById('debugOutput');
+            
+            const info = {
+                'URL': window.location.href,
+                'User Agent': navigator.userAgent,
+                'Speech Recognition': 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window,
+                'Media Devices': 'mediaDevices' in navigator,
+                'Chrome Extension': typeof chrome !== 'undefined',
+                'Rehbar AI Loaded': typeof window.rehbarAI !== 'undefined',
+                'Local Storage': typeof localStorage !== 'undefined',
+                'Timestamp': new Date().toISOString()
+            };
+            
+            debugOutput.textContent = JSON.stringify(info, null, 2);
+        }
+
+        // Clear extension storage
+        function clearStorage() {
+            if (typeof chrome !== 'undefined' && chrome.storage) {
+                chrome.storage.local.clear(() => {
+                    alert('Extension storage cleared! Please reconfigure the extension.');
+                });
+            } else {
+                alert('Cannot access extension storage');
+            }
+        }
+
+        // Listen for keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey) {
+                const shortcutStatus = document.getElementById('shortcutStatus');
+                const key = e.key.toLowerCase();
+                
+                let shortcut = '';
+                switch (key) {
+                    case 'l': shortcut = 'Toggle Listening'; break;
+                    case 'o': shortcut = 'Toggle Overlay'; break;
+                    case 'q': shortcut = 'Quick Action'; break;
+                    case 'm': shortcut = 'Switch Mode'; break;
+                    default: return;
+                }
+                
+                shortcutStatus.className = 'status success';
+                shortcutStatus.textContent = `✅ Detected: Ctrl+Shift+${key.toUpperCase()} (${shortcut})`;
+                
+                setTimeout(() => {
+                    shortcutStatus.className = 'status info';
+                    shortcutStatus.textContent = 'Press any shortcut to test...';
+                }, 3000);
+            }
+        });
+
+        // Auto-check setup on load
+        window.addEventListener('load', () => {
+            setTimeout(checkSetup, 1000);
+        });
+    </script>
+</body>
+</html>

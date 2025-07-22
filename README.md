@@ -70,8 +70,8 @@ Rehbar AI Platform
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/rehbar-ai.git
-cd rehbar-ai
+git clone https://github.com/itshussainsprojects/Rehbar-AI.git
+cd Rehbar-AI
 
 # Install backend dependencies
 cd backend

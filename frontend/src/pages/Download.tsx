@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Navigate, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { PrimaryButton } from '../components/PrimaryButton'
-import { Chrome, Monitor, Smartphone, Lock, ArrowRight, CheckCircle } from 'lucide-react'
+import { Chrome, Monitor, Lock, ArrowRight, CheckCircle } from 'lucide-react'
 
 export default function Download() {
   const [showRedirect, setShowRedirect] = useState(false)
@@ -124,9 +124,9 @@ function DownloadPortal() {
                 </p>
 
                 <div className="space-y-3">
-                  <PrimaryButton 
+                  <PrimaryButton
                     className="w-full"
-                    onClick={() => window.open('https://chrome.google.com/webstore', '_blank')}
+                    onClick={() => window.open('https://chrome.google.com/webstore/detail/rehbar-ai/your-extension-id', '_blank')}
                   >
                     Install from Chrome Store
                   </PrimaryButton>
@@ -136,7 +136,7 @@ function DownloadPortal() {
                     onClick={() => {
                       // Create download link for local extension
                       const link = document.createElement('a')
-                      link.href = '/chrome-extension.zip'
+                      link.href = `${(import.meta as any).env.VITE_API_BASE_URL || ''}/downloads/chrome-extension.zip`
                       link.download = 'rehbar-ai-extension.zip'
                       link.click()
                     }}
@@ -176,16 +176,17 @@ function DownloadPortal() {
                     onClick={() => {
                       // Detect OS and download appropriate version
                       const userAgent = navigator.userAgent
-                      let downloadUrl = '/desktop-app'
-                      
+                      const baseUrl = (import.meta as any).env.VITE_API_BASE_URL || ''
+                      let downloadUrl = `${baseUrl}/downloads/desktop-app`
+
                       if (userAgent.includes('Windows')) {
-                        downloadUrl = '/rehbar-ai-windows.exe'
+                        downloadUrl = `${baseUrl}/downloads/rehbar-ai-windows.exe`
                       } else if (userAgent.includes('Mac')) {
-                        downloadUrl = '/rehbar-ai-mac.dmg'
+                        downloadUrl = `${baseUrl}/downloads/rehbar-ai-mac.dmg`
                       } else if (userAgent.includes('Linux')) {
-                        downloadUrl = '/rehbar-ai-linux.AppImage'
+                        downloadUrl = `${baseUrl}/downloads/rehbar-ai-linux.AppImage`
                       }
-                      
+
                       const link = document.createElement('a')
                       link.href = downloadUrl
                       link.download = 'rehbar-ai-desktop'

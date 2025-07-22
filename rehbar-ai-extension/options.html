@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rehbar AI - Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">🤖</div>
+        <h1>Rehbar AI Settings</h1>
+      </div>
+      <p class="subtitle">Configure your AI assistant for interviews and sales calls</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- API Configuration -->
+      <section class="section">
+        <div class="section-header">
+          <h2>🔑 API Configuration</h2>
+          <p>Connect your Google Gemini API for AI-powered suggestions</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="apiKey">Google Gemini API Key</label>
+          <div class="input-group">
+            <input 
+              type="password" 
+              id="apiKey" 
+              placeholder="Enter your Gemini API key..."
+              autocomplete="off"
+            >
+            <button type="button" id="testApiBtn" class="btn btn-secondary">Test</button>
+          </div>
+          <div id="apiKeyStatus" class="status-message"></div>
+          <div class="help-text">
+            Get your free API key from 
+            <a href="https://makersuite.google.com/app/apikey" target="_blank" rel="noopener">
+              Google AI Studio
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Content Upload -->
+      <section class="section">
+        <div class="section-header">
+          <h2>📄 Content Upload</h2>
+          <p>Upload your resume or product information for context-aware suggestions</p>
+        </div>
+
+        <div class="upload-grid">
+          <!-- Resume Upload -->
+          <div class="upload-card">
+            <div class="upload-header">
+              <h3>📋 Resume / CV</h3>
+              <p>For Interview Mode</p>
+            </div>
+            <div class="upload-area" id="resumeUpload">
+              <div class="upload-icon">📄</div>
+              <div class="upload-text">
+                <span class="upload-title">Click to upload resume</span>
+                <span class="upload-subtitle">Supports .txt, .pdf, .docx files</span>
+              </div>
+              <input type="file" id="resumeFile" accept=".txt,.pdf,.docx" hidden>
+            </div>
+            <div id="resumeStatus" class="upload-status"></div>
+          </div>
+
+          <!-- Product Sheet Upload -->
+          <div class="upload-card">
+            <div class="upload-header">
+              <h3>💼 Product Sheet</h3>
+              <p>For Sales Mode</p>
+            </div>
+            <div class="upload-area" id="productUpload">
+              <div class="upload-icon">📊</div>
+              <div class="upload-text">
+                <span class="upload-title">Click to upload product info</span>
+                <span class="upload-subtitle">Supports .txt, .pdf, .docx files</span>
+              </div>
+              <input type="file" id="productFile" accept=".txt,.pdf,.docx" hidden>
+            </div>
+            <div id="productStatus" class="upload-status"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assistant Settings -->
+      <section class="section">
+        <div class="section-header">
+          <h2>⚙️ Assistant Settings</h2>
+          <p>Customize how your AI assistant behaves</p>
+        </div>
+
+        <div class="settings-grid">
+          <div class="setting-group">
+            <label for="defaultMode">Default Mode</label>
+            <select id="defaultMode">
+              <option value="interview">Interview Mode</option>
+              <option value="sales">Sales Mode</option>
+            </select>
+          </div>
+
+          <div class="setting-group">
+            <label for="responseLength">Response Length: <span id="responseLengthValue">80</span> words</label>
+            <input 
+              type="range" 
+              id="responseLength" 
+              min="30" 
+              max="150" 
+              value="80"
+              class="slider"
+            >
+            <div class="range-labels">
+              <span>Concise (30)</span>
+              <span>Detailed (150)</span>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <label for="typingSpeed">Auto-type Speed: <span id="typingSpeedValue">50</span>ms</label>
+            <input 
+              type="range" 
+              id="typingSpeed" 
+              min="10" 
+              max="200" 
+              value="50"
+              class="slider"
+            >
+            <div class="range-labels">
+              <span>Fast (10ms)</span>
+              <span>Slow (200ms)</span>
+            </div>
+          </div>
+
+          <div class="setting-group">
+            <label for="ttsVoice">Text-to-Speech Voice</label>
+            <select id="ttsVoice">
+              <option value="default">Default Voice</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage Statistics -->
+      <section class="section">
+        <div class="section-header">
+          <h2>📊 Usage Statistics</h2>
+          <p>Track your AI assistant usage</p>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-content">
+              <div class="stat-value" id="totalSessions">0</div>
+              <div class="stat-label">Total Sessions</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🔤</div>
+            <div class="stat-content">
+              <div class="stat-value" id="totalTokens">0</div>
+              <div class="stat-label">Tokens Used</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <div class="stat-content">
+              <div class="stat-value" id="lastUsed">Never</div>
+              <div class="stat-label">Last Used</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-actions">
+        <button type="button" id="resetBtn" class="btn btn-danger">Reset All Data</button>
+        <div class="footer-main">
+          <button type="button" id="saveBtn" class="btn btn-primary">
+            <span class="btn-text">Save Settings</span>
+            <span class="btn-icon">💾</span>
+          </button>
+        </div>
+      </div>
+      
+      <div id="saveStatus" class="save-status"></div>
+    </footer>
+  </div>
+
+  <script src="lib/pdf.min.js"></script>
+  <script src="lib/mammoth.min.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

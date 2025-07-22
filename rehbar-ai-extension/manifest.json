@@ -1,0 +1,78 @@
+{
+  "manifest_version": 3,
+  "name": "Rehbar AI",
+  "version": "1.0.0",
+  "description": "Real-time voice coaching for interviews and sales calls",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "tabCapture"
+  ],
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://meet.google.com/*",
+        "*://*.zoom.us/*",
+        "*://teams.microsoft.com/*",
+        "*://*.zoom.com/*",
+        "*://teams.live.com/*",
+        "*://www.google.com/meet/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Rehbar AI - Voice Coaching Assistant"
+  },
+  "options_page": "options.html",
+  "commands": {
+    "toggle-chat": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Show/hide AI chat interface"
+    },
+    "toggle-listening": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Toggle voice listening on/off"
+    },
+    "toggle-overlay": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+O",
+        "mac": "Command+Shift+O"
+      },
+      "description": "Show/hide AI overlay"
+    },
+    "quick-action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Q",
+        "mac": "Command+Shift+Q"
+      },
+      "description": "Copy/type last AI suggestion"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["lib/*", "icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  }
+}

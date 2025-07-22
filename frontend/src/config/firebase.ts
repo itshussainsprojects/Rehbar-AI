@@ -155,7 +155,9 @@ const startSessionHeartbeat = (sessionId: string) => {
         body: JSON.stringify({ sessionId })
       })
     } catch (error) {
-      console.warn('Session heartbeat failed:', error)
+      if (import.meta.env.DEV) {
+        console.warn('Session heartbeat failed:', error)
+      }
     }
   }, 5 * 60 * 1000) // 5 minutes
 }
@@ -401,7 +403,9 @@ export const verifyPhoneCode = async (confirmationResult: any, code: string, pho
       refreshToken: backendResult.data.refreshToken
     };
   } catch (error: any) {
-    console.error('Phone verification error:', error);
+    if (import.meta.env.DEV) {
+      console.error('Phone verification error:', error);
+    }
     return {
       success: false,
       error: error.message
@@ -433,7 +437,9 @@ export const signOutUser = async () => {
           body: JSON.stringify({ sessionId })
         });
       } catch (error) {
-        console.warn('Backend logout failed:', error)
+        if (import.meta.env.DEV) {
+          console.warn('Backend logout failed:', error)
+        }
       }
     }
 

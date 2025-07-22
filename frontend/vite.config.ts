@@ -15,6 +15,8 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    minify: 'terser',
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -24,6 +26,12 @@ export default defineConfig({
           three: ['three', '@react-three/fiber', '@react-three/drei'],
           charts: ['recharts'],
         },
+      },
+    },
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
       },
     },
   },

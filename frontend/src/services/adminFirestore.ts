@@ -387,7 +387,9 @@ export const adminService = {
         plansDistribution
       };
     } catch (error) {
-      console.error('Error getting admin stats:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error getting admin stats:', error);
+      }
       throw error;
     }
   },
@@ -404,7 +406,9 @@ export const adminService = {
       const snapshot = await getDocs(q);
       return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as SystemLog));
     } catch (error) {
-      console.error('Error getting system logs:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error getting system logs:', error);
+      }
       throw error;
     }
   },

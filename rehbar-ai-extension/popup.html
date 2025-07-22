@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rehbar AI</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">🤖</div>
+        <h1>Rehbar AI</h1>
+      </div>
+      <button id="settingsBtn" class="icon-btn" title="Settings" aria-label="Open settings">
+        ⚙️
+      </button>
+    </div>
+
+    <!-- Status Section -->
+    <div class="status-section">
+      <div class="status-item">
+        <span class="label">Platform:</span>
+        <span id="platformStatus" class="status-value">Detecting...</span>
+      </div>
+      <div class="status-item">
+        <span class="label">Mode:</span>
+        <div class="mode-selector">
+          <label class="radio-label">
+            <input type="radio" name="mode" value="interview" id="interviewMode">
+            <span class="radio-custom"></span>
+            Interview
+          </label>
+          <label class="radio-label">
+            <input type="radio" name="mode" value="sales" id="salesMode">
+            <span class="radio-custom"></span>
+            Sales
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Control -->
+    <div class="control-section">
+      <button id="showChatBtn" class="show-chat-btn primary">
+        <div class="btn-icon">💬</div>
+        <span class="btn-text">Open Chat Interface</span>
+      </button>
+
+      <div class="info-text">
+        Open the chat interface to start voice recognition and get AI responses based on your resume.
+      </div>
+
+      <div id="errorMessage" class="error-message hidden">
+        <span class="error-icon">⚠️</span>
+        <span class="error-text"></span>
+      </div>
+    </div>
+
+    <!-- Setup Status -->
+    <div class="setup-section">
+      <h3>Setup Status</h3>
+      <div class="setup-item">
+        <span class="setup-label">API Key</span>
+        <div id="apiKeyStatus" class="status-dot status-error"></div>
+      </div>
+      <div class="setup-item">
+        <span class="setup-label" id="contextLabel">Resume</span>
+        <div id="contextStatus" class="status-dot status-error"></div>
+      </div>
+    </div>
+
+    <!-- Usage Stats -->
+    <div class="stats-section">
+      <div class="stat-item">
+        <span class="stat-label">Sessions:</span>
+        <span id="sessionCount" class="stat-value">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Tokens:</span>
+        <span id="tokenCount" class="stat-value">0</span>
+      </div>
+    </div>
+
+    <!-- Keyboard Shortcuts -->
+    <div class="shortcuts-section">
+      <h3>⌨️ Keyboard Shortcuts</h3>
+      <div class="shortcut-list">
+        <div class="shortcut-item">
+          <span class="shortcut-key">Ctrl+Shift+L</span>
+          <span class="shortcut-desc">Toggle listening</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-key">Ctrl+Shift+O</span>
+          <span class="shortcut-desc">Show/hide overlay</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-key">Ctrl+Shift+Q</span>
+          <span class="shortcut-desc">Quick action (copy/type/speak)</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-key">Ctrl+Shift+M</span>
+          <span class="shortcut-desc">Switch mode</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-key">1, 2, 3</span>
+          <span class="shortcut-desc">Copy suggestions</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-key">Shift+1,2,3</span>
+          <span class="shortcut-desc">Type suggestions</span>
+        </div>
+        <div class="shortcut-item">
+          <span class="shortcut-key">ESC</span>
+          <span class="shortcut-desc">Hide overlay</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <button id="optionsBtn" class="link-btn">Configure Settings</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

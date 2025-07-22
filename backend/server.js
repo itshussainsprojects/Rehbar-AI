@@ -143,11 +143,13 @@ io.use(async (socket, next) => {
 
 // Socket.IO connection handling
 io.on('connection', (socket) => {
-  console.log(`User ${socket.userId} connected`);
-  
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`User ${socket.userId} connected`);
+  }
+
   // Join user to their personal room
   socket.join(`user_${socket.userId}`);
-  
+
   // Handle voice streaming
   socket.on('voice_stream', async (data) => {
     try {
@@ -158,7 +160,7 @@ io.on('connection', (socket) => {
       socket.emit('error', { message: 'Voice processing failed' });
     }
   });
-  
+
   // Handle typing indicators
   socket.on('typing', (data) => {
     socket.to(`conversation_${data.conversationId}`).emit('user_typing', {
@@ -166,10 +168,12 @@ io.on('connection', (socket) => {
       isTyping: data.isTyping
     });
   });
-  
+
   // Handle disconnection
   socket.on('disconnect', () => {
-    console.log(`User ${socket.userId} disconnected`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`User ${socket.userId} disconnected`);
+    }
   });
 });
 
@@ -187,17 +191,23 @@ app.use('*', (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () => {
-  console.log(`🚀 Rehbar AI Backend Server running on port ${PORT}`);
-  console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔥 Firebase initialized`);
-  console.log(`🤖 Gemini AI ready`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`🚀 Rehbar AI Backend Server running on port ${PORT}`);
+    console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🔥 Firebase initialized`);
+    console.log(`🤖 Gemini AI ready`);
+  }
 });
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('SIGTERM received, shutting down gracefully');
+  }
   server.close(() => {
-    console.log('Process terminated');
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Process terminated');
+    }
   });
 });
 

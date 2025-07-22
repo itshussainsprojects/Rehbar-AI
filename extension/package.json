@@ -1,0 +1,42 @@
+{
+  "name": "rehbar-ai-extension",
+  "version": "1.0.0",
+  "description": "Live résumé-aware interview & sales assistant",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:prod": "node scripts/build.js",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:e2e": "playwright test",
+    "zip": "cd dist && zip -r rehbar_ai.zip .",
+    "clean": "rm -rf dist node_modules/.vite",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "framer-motion": "^10.16.4",
+    "lucide-react": "^0.263.1",
+    "clsx": "^2.0.0"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0-beta.19",
+    "@types/chrome": "^0.0.246",
+    "@types/node": "^20.8.0",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@vitejs/plugin-react": "^4.1.1",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vitest": "^0.34.6",
+    "@playwright/test": "^1.40.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/jest-dom": "^6.1.4",
+    "jsdom": "^23.0.1"
+  }
+}

@@ -230,7 +230,9 @@ async function checkSuspiciousPatterns(userId, ip, userAgent, endpoint) {
     }
 
   } catch (error) {
-    console.error('Error checking suspicious patterns:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Error checking suspicious patterns:', error);
+    }
   }
 
   return patterns;
@@ -251,7 +253,9 @@ async function logSecurityEvent(req, eventType, details) {
       severity: getSeverityLevel(eventType)
     });
   } catch (error) {
-    console.error('Error logging security event:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      console.error('Error logging security event:', error);
+    }
   }
 }
 

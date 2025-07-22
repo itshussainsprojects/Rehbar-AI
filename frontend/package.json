@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "build-check": "tsc && vite build",
     "preview": "vite preview",
-    "vercel": "vercel --prod"
+    "vercel": "vercel --prod",
+    "lint": "tsc --noEmit",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@react-three/drei": "^9.122.0",

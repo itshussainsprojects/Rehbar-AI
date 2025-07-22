@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Rehbar AI",
+  "description": "Live résumé-aware interview & sales assistant.",
+  "version": "1.0.0",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "microphone"
+  ],
+  "host_permissions": [
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "background": {
+    "service_worker": "src/serviceWorker.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://meet.google.com/*",
+        "*://*.zoom.us/*",
+        "*://teams.microsoft.com/*"
+      ],
+      "js": ["src/content/overlay.tsx"],
+      "css": ["src/content/styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/Popup.html"
+  },
+  "options_page": "src/options/Options.html",
+  "web_accessible_resources": [
+    {
+      "resources": ["src/content/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

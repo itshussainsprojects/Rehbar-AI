@@ -1,0 +1,190 @@
+/* Content script specific styles */
+@import '../styles/globals.css';
+
+/* Ensure extension overlay doesn't interfere with page styles */
+#rehbar-ai-overlay {
+  all: initial;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  z-index: 2147483647 !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+#rehbar-ai-overlay * {
+  box-sizing: border-box !important;
+}
+
+/* Override any page styles that might interfere */
+#rehbar-ai-overlay .overlay-content {
+  pointer-events: auto !important;
+  position: fixed !important;
+  top: 1rem !important;
+  right: 1rem !important;
+  z-index: 2147483647 !important;
+  max-width: 320px !important;
+  max-height: 80vh !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Ensure text is readable */
+#rehbar-ai-overlay .text-content {
+  color: white !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  font-weight: normal !important;
+  text-decoration: none !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+/* Button reset and styling */
+#rehbar-ai-overlay button {
+  all: unset !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+  user-select: none !important;
+}
+
+#rehbar-ai-overlay button:hover {
+  transform: translateY(-1px) !important;
+}
+
+#rehbar-ai-overlay button:active {
+  transform: translateY(0) !important;
+}
+
+/* Input reset */
+#rehbar-ai-overlay input {
+  all: unset !important;
+  display: block !important;
+  width: 100% !important;
+  border-radius: 6px !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+/* Scrollbar styling */
+#rehbar-ai-overlay ::-webkit-scrollbar {
+  width: 4px !important;
+}
+
+#rehbar-ai-overlay ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 2px !important;
+}
+
+#rehbar-ai-overlay ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 2px !important;
+}
+
+#rehbar-ai-overlay ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  #rehbar-ai-overlay .overlay-content {
+    left: 0.5rem !important;
+    right: 0.5rem !important;
+    max-width: none !important;
+  }
+}
+
+@media (max-height: 600px) {
+  #rehbar-ai-overlay .overlay-content {
+    max-height: 70vh !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  #rehbar-ai-overlay .overlay-content {
+    border: 2px solid white !important;
+  }
+  
+  #rehbar-ai-overlay .text-content {
+    color: white !important;
+    text-shadow: 1px 1px 1px black !important;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  #rehbar-ai-overlay * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus management */
+#rehbar-ai-overlay *:focus {
+  outline: 2px solid #3b82f6 !important;
+  outline-offset: 2px !important;
+}
+
+/* Ensure overlay doesn't break page layout */
+body:has(#rehbar-ai-overlay) {
+  /* No changes to body */
+}
+
+/* Hide overlay during print */
+@media print {
+  #rehbar-ai-overlay {
+    display: none !important;
+  }
+}
