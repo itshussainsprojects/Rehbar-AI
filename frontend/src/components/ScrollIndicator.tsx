@@ -25,7 +25,6 @@ export function ScrollIndicator() {
     >
       <motion.div
         className="h-full bg-gradient-blue"
-        style={{ scaleX: scrollProgress }}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: scrollProgress }}
         transition={{ duration: 0.1 }}
